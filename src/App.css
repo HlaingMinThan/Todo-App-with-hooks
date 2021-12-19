@@ -1,4 +1,6 @@
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -23,7 +25,8 @@ body {
   padding: 2rem;
   background: white;
   border-radius: 0.25rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
   max-width: 32rem;
   color: #374151;
 }
@@ -80,13 +83,13 @@ h2 {
 
 .x-button {
   background: white;
-  color: #6B7280;
+  color: #6b7280;
   border: none;
   cursor: pointer;
 }
 
 .x-button:hover {
-  color: #1F2937;
+  color: #1f2937;
 }
 
 .x-button-icon {
@@ -95,7 +98,7 @@ h2 {
 }
 
 .button {
-  color: #6B7280;
+  color: #6b7280;
   font-size: 14px;
   background: white;
   border: 1px solid lightgray;
@@ -120,7 +123,7 @@ h2 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #6B7280;
+  color: #6b7280;
   margin-top: 22px;
   padding-top: 16px;
   border-top: 1px solid lightgray;
@@ -130,8 +133,18 @@ h2 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #6B7280;
+  color: #6b7280;
   margin-top: 22px;
   padding-top: 16px;
   border-top: 1px solid lightgray;
+}
+
+.no-todos-container {
+  width: 300px;
+  margin: 30px auto;
+}
+
+.no-todos-container p {
+  margin-top: 20px;
+  text-align: center;
 }
