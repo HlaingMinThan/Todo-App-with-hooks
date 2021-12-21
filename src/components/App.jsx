@@ -1,6 +1,6 @@
 import '../reset.css';
 import '../App.css';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import TodoList from './TodoList';
 import TodoForm from './TodoForm';
 import EmptyTodoFeedback from './EmptyTodoFeedback';
@@ -12,7 +12,7 @@ function App() {
   ]);
   let [filteredTodos, setFilteredTodos] = useState(todos);
   let [filter, setFilter] = useState('all');
-  let nameInputRef = useRef(null);
+  let [name, setName] = useState('');
 
   useEffect(() => {
     if (filter === 'all') {
@@ -38,9 +38,15 @@ function App() {
     });
     setTodos(updatedTodos);
   };
-  let remainingItems = () => {
+  /*
+    this function  only run when filteredTodos is updated
+    benefits - reduce slow component rendering because this fun not always run for every state change.
+  */
+  const remainingItems = useMemo(() => {
+    //long calculation for every render that can slow when component is rerender
+    for (let index = 0; index < 200000000; index++) {}
     return filteredTodos.filter(todo => !todo.completed).length;
-  };
+  }, [filteredTodos]);
   let markAsEdit = id => {
     let updatedTodos = todos.map(todo => {
       if (todo.id === id) {
@@ -106,20 +112,15 @@ function App() {
       <div className="todo-app">
         <div className="name-container">
           <h2>What's your Name</h2>
-          <button
-            type="button"
-            onClick={() => {
-              console.log(nameInputRef.current.value);
-            }}
-          >
-            get ref
-          </button>
           <input
-            ref={nameInputRef}
             type="text"
+            value={name}
+            onChange={e => setName(e.target.value)} //this will rerender when user is typing
             className="todo-input"
             placeholder="What is your name?"
           />
+
+          {name && <p>Hello {name}</p>}
         </div>
         <h2>Todo App</h2>
         <TodoForm onHandleSubmit={handleSubmit} />

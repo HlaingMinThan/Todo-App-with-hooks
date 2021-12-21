@@ -8,7 +8,7 @@ TodoList.propTypes = {
   onCheckedHandler: propTypes.func.isRequired,
   onMarkAsEdit: propTypes.func.isRequired,
   onHandleKey: propTypes.func.isRequired,
-  remainingItems: propTypes.func.isRequired,
+  remainingItems: propTypes.number.isRequired,
   onClearCompleted: propTypes.func.isRequired,
   checkAll: propTypes.func.isRequired,
   setFilter: propTypes.func.isRequired,
