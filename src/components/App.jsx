@@ -1,6 +1,6 @@
 import '../reset.css';
 import '../App.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import TodoList from './TodoList';
 import TodoForm from './TodoForm';
 import EmptyTodoFeedback from './EmptyTodoFeedback';
@@ -12,6 +12,7 @@ function App() {
   ]);
   let [filteredTodos, setFilteredTodos] = useState(todos);
   let [filter, setFilter] = useState('all');
+  let nameInputRef = useRef(null);
 
   useEffect(() => {
     if (filter === 'all') {
@@ -99,9 +100,27 @@ function App() {
       updateTodo(e, id);
     }
   };
+
   return (
     <div className="todo-app-container">
       <div className="todo-app">
+        <div className="name-container">
+          <h2>What's your Name</h2>
+          <button
+            type="button"
+            onClick={() => {
+              console.log(nameInputRef.current.value);
+            }}
+          >
+            get ref
+          </button>
+          <input
+            ref={nameInputRef}
+            type="text"
+            className="todo-input"
+            placeholder="What is your name?"
+          />
+        </div>
         <h2>Todo App</h2>
         <TodoForm onHandleSubmit={handleSubmit} />
         {!!todos.length && (
