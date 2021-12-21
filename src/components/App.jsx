@@ -1,6 +1,6 @@
 import '../reset.css';
 import '../App.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TodoList from './TodoList';
 import TodoForm from './TodoForm';
 import EmptyTodoFeedback from './EmptyTodoFeedback';
@@ -10,6 +10,20 @@ function App() {
     { id: 2, title: 'this is title 2', completed: true, isEdit: false },
     { id: 3, title: 'this is title 3', completed: false, isEdit: false },
   ]);
+  let [filteredTodos, setFilteredTodos] = useState(todos);
+  let [filter, setFilter] = useState('all');
+
+  useEffect(() => {
+    if (filter === 'all') {
+      setFilteredTodos(todos);
+    }
+    if (filter === 'active') {
+      setFilteredTodos(todos.filter(todo => !todo.completed));
+    }
+    if (filter === 'completed') {
+      setFilteredTodos(todos.filter(todo => todo.completed));
+    }
+  }, [filter, todos]);
 
   let deleteTodo = id =>
     setTodos(prevTodos => prevTodos.filter(todo => todo.id !== id));
@@ -23,7 +37,9 @@ function App() {
     });
     setTodos(updatedTodos);
   };
-
+  let remainingItems = () => {
+    return filteredTodos.filter(todo => !todo.completed).length;
+  };
   let markAsEdit = id => {
     let updatedTodos = todos.map(todo => {
       if (todo.id === id) {
@@ -62,7 +78,19 @@ function App() {
     });
     setTodos(updateTodos);
   };
-
+  let onClearCompleted = () => {
+    setTodos(prevTodos => {
+      return prevTodos.filter(todo => !todo.completed);
+    });
+  };
+  let checkAll = () => {
+    setTodos(prevTodos => {
+      return prevTodos.map(todo => {
+        todo.completed = true;
+        return todo;
+      });
+    });
+  };
   let handleKey = (e, id) => {
     if (e.key === 'Escape') {
       cancelTodo(id);
@@ -78,12 +106,17 @@ function App() {
         <TodoForm onHandleSubmit={handleSubmit} />
         {!!todos.length && (
           <TodoList
+            filter={filter}
+            checkAll={checkAll}
             onDeleteTodo={deleteTodo}
             onUpdateTodo={updateTodo}
             onCheckedHandler={checkedHandler}
-            todos={todos}
+            filteredTodos={filteredTodos}
             onMarkAsEdit={markAsEdit}
             onHandleKey={handleKey}
+            onClearCompleted={onClearCompleted}
+            setFilter={setFilter}
+            remainingItems={remainingItems}
           />
         )}
         {!todos.length && <EmptyTodoFeedback />}

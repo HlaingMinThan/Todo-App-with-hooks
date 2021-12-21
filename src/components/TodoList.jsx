@@ -1,30 +1,41 @@
 import React from 'react';
 import propTypes from 'prop-types';
-
+import TodosRemaining from './TodosRemaining';
+import ClearCompleted from './ClearCompleted';
 TodoList.propTypes = {
-  todos: propTypes.array.isRequired,
+  filteredTodos: propTypes.array.isRequired,
   onDeleteTodo: propTypes.func.isRequired,
   onCheckedHandler: propTypes.func.isRequired,
   onMarkAsEdit: propTypes.func.isRequired,
   onHandleKey: propTypes.func.isRequired,
+  remainingItems: propTypes.func.isRequired,
+  onClearCompleted: propTypes.func.isRequired,
+  checkAll: propTypes.func.isRequired,
+  setFilter: propTypes.func.isRequired,
+  filter: propTypes.string.isRequired,
 };
 export default function TodoList({
-  todos,
+  filteredTodos,
+  remainingItems,
   onDeleteTodo,
   onCheckedHandler,
   onMarkAsEdit,
   onUpdateTodo,
   onHandleKey,
+  onClearCompleted,
+  checkAll,
+  setFilter,
+  filter,
 }) {
   return (
     <>
       <ul className="todo-list">
-        {todos.map(todo => (
+        {filteredTodos.map(todo => (
           <li className="todo-item-container" key={todo.id}>
             <div className="todo-item">
               <input
                 type="checkbox"
-                defaultChecked={todo.completed}
+                checked={todo.completed}
                 onChange={() => onCheckedHandler(todo.id)}
               />
               {!todo.isEdit && (
@@ -72,23 +83,42 @@ export default function TodoList({
       </ul>
       <div className="check-all-container">
         <div>
-          <div className="button">Check All</div>
+          <div className="button" onClick={checkAll}>
+            Check All
+          </div>
         </div>
-        <span>
-          {todos.filter(todo => !todo.completed).length} items remaining
-        </span>
+        <TodosRemaining remainingItems={remainingItems} />
       </div>
 
       <div className="other-buttons-container">
         <div>
-          <button className="button filter-button filter-button-active">
+          <button
+            className={`button filter-button ${
+              filter === 'all' ? 'filter-button-active' : ''
+            }`}
+            onClick={() => setFilter('all')}
+          >
             All
           </button>
-          <button className="button filter-button">Active</button>
-          <button className="button filter-button">Completed</button>
+          <button
+            className={`button filter-button ${
+              filter === 'active' ? 'filter-button-active' : ''
+            }`}
+            onClick={() => setFilter('active')}
+          >
+            Active
+          </button>
+          <button
+            className={`button filter-button ${
+              filter === 'completed' ? 'filter-button-active' : ''
+            }`}
+            onClick={() => setFilter('completed')}
+          >
+            Completed
+          </button>
         </div>
         <div>
-          <button className="button">Clear completed</button>
+          <ClearCompleted onClearCompleted={onClearCompleted} />
         </div>
       </div>
     </>
