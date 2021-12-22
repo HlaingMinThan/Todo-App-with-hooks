@@ -2,6 +2,7 @@ import React from 'react';
 import propTypes from 'prop-types';
 import TodosRemaining from './TodosRemaining';
 import ClearCompleted from './ClearCompleted';
+import useToggle from '../hooks/useToggle';
 TodoList.propTypes = {
   filteredTodos: propTypes.array.isRequired,
   onDeleteTodo: propTypes.func.isRequired,
@@ -27,6 +28,8 @@ export default function TodoList({
   setFilter,
   filter,
 }) {
+  let [firstVisiable, togglefirstVisiable] = useToggle();
+  let [secondVisiable, toggleSecondVisiable] = useToggle();
   return (
     <>
       <ul className="todo-list">
@@ -81,46 +84,58 @@ export default function TodoList({
           </li>
         ))}
       </ul>
-      <div className="check-all-container">
-        <div>
-          <div className="button" onClick={checkAll}>
-            Check All
+      <div className="toggles-container">
+        <button className="button" onClick={togglefirstVisiable}>
+          toggle first
+        </button>
+        <button className="button" onClick={toggleSecondVisiable}>
+          toggle second
+        </button>
+      </div>
+      {firstVisiable && (
+        <div className="check-all-container">
+          <div>
+            <div className="button" onClick={checkAll}>
+              Check All
+            </div>
+          </div>
+          <TodosRemaining remainingItems={remainingItems} />
+        </div>
+      )}
+
+      {secondVisiable && (
+        <div className="other-buttons-container">
+          <div>
+            <button
+              className={`button filter-button ${
+                filter === 'all' ? 'filter-button-active' : ''
+              }`}
+              onClick={() => setFilter('all')}
+            >
+              All
+            </button>
+            <button
+              className={`button filter-button ${
+                filter === 'active' ? 'filter-button-active' : ''
+              }`}
+              onClick={() => setFilter('active')}
+            >
+              Active
+            </button>
+            <button
+              className={`button filter-button ${
+                filter === 'completed' ? 'filter-button-active' : ''
+              }`}
+              onClick={() => setFilter('completed')}
+            >
+              Completed
+            </button>
+          </div>
+          <div>
+            <ClearCompleted onClearCompleted={onClearCompleted} />
           </div>
         </div>
-        <TodosRemaining remainingItems={remainingItems} />
-      </div>
-
-      <div className="other-buttons-container">
-        <div>
-          <button
-            className={`button filter-button ${
-              filter === 'all' ? 'filter-button-active' : ''
-            }`}
-            onClick={() => setFilter('all')}
-          >
-            All
-          </button>
-          <button
-            className={`button filter-button ${
-              filter === 'active' ? 'filter-button-active' : ''
-            }`}
-            onClick={() => setFilter('active')}
-          >
-            Active
-          </button>
-          <button
-            className={`button filter-button ${
-              filter === 'completed' ? 'filter-button-active' : ''
-            }`}
-            onClick={() => setFilter('completed')}
-          >
-            Completed
-          </button>
-        </div>
-        <div>
-          <ClearCompleted onClearCompleted={onClearCompleted} />
-        </div>
-      </div>
+      )}
     </>
   );
 }
