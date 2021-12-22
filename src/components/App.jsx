@@ -1,16 +1,18 @@
 import '../reset.css';
 import '../App.css';
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import TodoList from './TodoList';
 import TodoForm from './TodoForm';
 import EmptyTodoFeedback from './EmptyTodoFeedback';
 import useLocalStorage from '../hooks/useLocalStorage';
+import TodosContext from '../context/TodosContext';
+
 function App() {
+  let [name, setName] = useLocalStorage('name', '');
   let [todos, setTodos] = useLocalStorage('todos', []);
 
-  let [filteredTodos, setFilteredTodos] = useState(todos);
   let [filter, setFilter] = useState('all');
-  let [name, setName] = useLocalStorage('name', '');
+  let [filteredTodos, setFilteredTodos] = useState(todos);
 
   useEffect(() => {
     if (filter === 'all') {
@@ -24,9 +26,6 @@ function App() {
     }
   }, [filter, todos]);
 
-  let deleteTodo = id =>
-    setTodos(prevTodos => prevTodos.filter(todo => todo.id !== id));
-
   let checkedHandler = id => {
     let updatedTodos = todos.map(todo => {
       if (todo.id === id) {
@@ -36,15 +35,7 @@ function App() {
     });
     setTodos(updatedTodos);
   };
-  /*
-    this function  only run when filteredTodos is updated
-    benefits - reduce slow component rendering because this fun not always run for every state change.
-  */
-  const remainingItems = useMemo(() => {
-    //long calculation for every render that can slow when component is rerender
-    for (let index = 0; index < 200000000; index++) {}
-    return filteredTodos.filter(todo => !todo.completed).length;
-  }, [filteredTodos]);
+
   let markAsEdit = id => {
     let updatedTodos = todos.map(todo => {
       if (todo.id === id) {
@@ -55,12 +46,6 @@ function App() {
       return todo;
     });
     setTodos(updatedTodos);
-  };
-  let handleSubmit = title => {
-    setTodos(prevTodos => [
-      ...prevTodos,
-      { id: Math.random(), title, completed: false },
-    ]);
   };
 
   let updateTodo = (e, id) => {
@@ -83,19 +68,7 @@ function App() {
     });
     setTodos(updateTodos);
   };
-  let onClearCompleted = () => {
-    setTodos(prevTodos => {
-      return prevTodos.filter(todo => !todo.completed);
-    });
-  };
-  let checkAll = () => {
-    setTodos(prevTodos => {
-      return prevTodos.map(todo => {
-        todo.completed = true;
-        return todo;
-      });
-    });
-  };
+
   let handleKey = (e, id) => {
     if (e.key === 'Escape') {
       cancelTodo(id);
@@ -104,44 +77,37 @@ function App() {
       updateTodo(e, id);
     }
   };
-  let handleNameInput = e => {
-    setName(e.target.value);
-  };
   return (
-    <div className="todo-app-container">
-      <div className="todo-app">
-        <div className="name-container">
-          <h2>What's your Name</h2>
-          <input
-            type="text"
-            value={name}
-            onChange={handleNameInput} //this will rerender when user is typing
-            className="todo-input"
-            placeholder="What is your name?"
-          />
+    <TodosContext.Provider value={{ todos, setTodos, filter, setFilter }}>
+      <div className="todo-app-container">
+        <div className="todo-app">
+          <div className="name-container">
+            <h2>What's your Name</h2>
+            <input
+              type="text"
+              value={name}
+              onChange={e => setName(e.target.value)}
+              className="todo-input"
+              placeholder="What is your name?"
+            />
+            {name && <p className="mt-2">Hello {name}</p>}
+          </div>
 
-          {name && <p className="mt-2">Hello {name}</p>}
+          <h2>Todo App</h2>
+          <TodoForm />
+          {!!todos.length && (
+            <TodoList
+              onUpdateTodo={updateTodo}
+              onCheckedHandler={checkedHandler}
+              filteredTodos={filteredTodos}
+              onMarkAsEdit={markAsEdit}
+              onHandleKey={handleKey}
+            />
+          )}
+          {!todos.length && <EmptyTodoFeedback />}
         </div>
-        <h2>Todo App</h2>
-        <TodoForm onHandleSubmit={handleSubmit} />
-        {!!todos.length && (
-          <TodoList
-            filter={filter}
-            checkAll={checkAll}
-            onDeleteTodo={deleteTodo}
-            onUpdateTodo={updateTodo}
-            onCheckedHandler={checkedHandler}
-            filteredTodos={filteredTodos}
-            onMarkAsEdit={markAsEdit}
-            onHandleKey={handleKey}
-            onClearCompleted={onClearCompleted}
-            setFilter={setFilter}
-            remainingItems={remainingItems}
-          />
-        )}
-        {!todos.length && <EmptyTodoFeedback />}
       </div>
-    </div>
+    </TodosContext.Provider>
   );
 }
 

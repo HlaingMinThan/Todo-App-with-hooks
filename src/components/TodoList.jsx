@@ -3,30 +3,21 @@ import propTypes from 'prop-types';
 import TodosRemaining from './TodosRemaining';
 import ClearCompleted from './ClearCompleted';
 import useToggle from '../hooks/useToggle';
+import FilterButtons from './FilterButtons';
+import CheckAllTodos from './CheckAllTodos';
+import DeleteTodo from './DeleteTodo';
 TodoList.propTypes = {
   filteredTodos: propTypes.array.isRequired,
-  onDeleteTodo: propTypes.func.isRequired,
   onCheckedHandler: propTypes.func.isRequired,
   onMarkAsEdit: propTypes.func.isRequired,
   onHandleKey: propTypes.func.isRequired,
-  remainingItems: propTypes.number.isRequired,
-  onClearCompleted: propTypes.func.isRequired,
-  checkAll: propTypes.func.isRequired,
-  setFilter: propTypes.func.isRequired,
-  filter: propTypes.string.isRequired,
 };
 export default function TodoList({
   filteredTodos,
-  remainingItems,
-  onDeleteTodo,
   onCheckedHandler,
   onMarkAsEdit,
   onUpdateTodo,
   onHandleKey,
-  onClearCompleted,
-  checkAll,
-  setFilter,
-  filter,
 }) {
   let [firstVisiable, togglefirstVisiable] = useToggle();
   let [secondVisiable, toggleSecondVisiable] = useToggle();
@@ -66,21 +57,8 @@ export default function TodoList({
                 />
               )}
             </div>
-            <button className="x-button" onClick={() => onDeleteTodo(todo.id)}>
-              <svg
-                className="x-button-icon"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
+
+            <DeleteTodo id={todo.id} />
           </li>
         ))}
       </ul>
@@ -94,46 +72,15 @@ export default function TodoList({
       </div>
       {firstVisiable && (
         <div className="check-all-container">
-          <div>
-            <div className="button" onClick={checkAll}>
-              Check All
-            </div>
-          </div>
-          <TodosRemaining remainingItems={remainingItems} />
+          <CheckAllTodos />
+          <TodosRemaining />
         </div>
       )}
 
       {secondVisiable && (
         <div className="other-buttons-container">
-          <div>
-            <button
-              className={`button filter-button ${
-                filter === 'all' ? 'filter-button-active' : ''
-              }`}
-              onClick={() => setFilter('all')}
-            >
-              All
-            </button>
-            <button
-              className={`button filter-button ${
-                filter === 'active' ? 'filter-button-active' : ''
-              }`}
-              onClick={() => setFilter('active')}
-            >
-              Active
-            </button>
-            <button
-              className={`button filter-button ${
-                filter === 'completed' ? 'filter-button-active' : ''
-              }`}
-              onClick={() => setFilter('completed')}
-            >
-              Completed
-            </button>
-          </div>
-          <div>
-            <ClearCompleted onClearCompleted={onClearCompleted} />
-          </div>
+          <FilterButtons />
+          <ClearCompleted />
         </div>
       )}
     </>

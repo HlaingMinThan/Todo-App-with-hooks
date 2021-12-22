@@ -1,10 +1,8 @@
-import propTypes from 'prop-types';
-import React, { useState } from 'react';
-TodoForm.propTypes = {
-  onHandleSubmit: propTypes.func.isRequired,
-};
-export default function TodoForm({ onHandleSubmit }) {
+import React, { useContext, useState } from 'react';
+import TodosContext from '../context/TodosContext';
+export default function TodoForm() {
   let [title, setTitle] = useState('');
+  let { setTodos } = useContext(TodosContext);
   let handleInput = e => {
     setTitle(e.target.value);
   };
@@ -14,10 +12,13 @@ export default function TodoForm({ onHandleSubmit }) {
       return;
     }
     setTitle('');
-    onHandleSubmit(title);
+    setTodos(prevTodos => [
+      ...prevTodos,
+      { id: Math.random(), title, completed: false },
+    ]);
   };
   return (
-    <form action="#" onSubmit={submitHandler}>
+    <form onSubmit={submitHandler}>
       <input
         value={title}
         onChange={handleInput}
