@@ -84,7 +84,7 @@ export default function TodoList({
           </li>
         ))}
       </ul>
-      <div className="toggles-container">
+      <div className="toggles-container mt-2">
         <button className="button" onClick={togglefirstVisiable}>
           toggle first
         </button>

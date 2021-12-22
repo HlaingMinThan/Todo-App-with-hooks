@@ -4,15 +4,13 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import TodoList from './TodoList';
 import TodoForm from './TodoForm';
 import EmptyTodoFeedback from './EmptyTodoFeedback';
+import useLocalStorage from '../hooks/useLocalStorage';
 function App() {
-  let [todos, setTodos] = useState([
-    { id: 1, title: 'this is title 1', completed: false, isEdit: false },
-    { id: 2, title: 'this is title 2', completed: true, isEdit: false },
-    { id: 3, title: 'this is title 3', completed: false, isEdit: false },
-  ]);
+  let [todos, setTodos] = useLocalStorage('todos', []);
+
   let [filteredTodos, setFilteredTodos] = useState(todos);
   let [filter, setFilter] = useState('all');
-  let [name, setName] = useState('');
+  let [name, setName] = useLocalStorage('name', '');
 
   useEffect(() => {
     if (filter === 'all') {
@@ -106,7 +104,9 @@ function App() {
       updateTodo(e, id);
     }
   };
-
+  let handleNameInput = e => {
+    setName(e.target.value);
+  };
   return (
     <div className="todo-app-container">
       <div className="todo-app">
@@ -115,12 +115,12 @@ function App() {
           <input
             type="text"
             value={name}
-            onChange={e => setName(e.target.value)} //this will rerender when user is typing
+            onChange={handleNameInput} //this will rerender when user is typing
             className="todo-input"
             placeholder="What is your name?"
           />
 
-          {name && <p>Hello {name}</p>}
+          {name && <p className="mt-2">Hello {name}</p>}
         </div>
         <h2>Todo App</h2>
         <TodoForm onHandleSubmit={handleSubmit} />
