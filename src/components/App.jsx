@@ -79,33 +79,30 @@ function App() {
   };
   return (
     <TodosContext.Provider value={{ todos, setTodos, filter, setFilter }}>
-      <div className="todo-app-container">
-        <div className="todo-app">
-          <div className="name-container">
-            <h2>What's your Name</h2>
-            <input
-              type="text"
-              value={name}
-              onChange={e => setName(e.target.value)}
-              className="todo-input"
-              placeholder="What is your name?"
-            />
-            {name && <p className="mt-2">Hello {name}</p>}
-          </div>
-
-          <h2>Todo App</h2>
-          <TodoForm />
-          {!!todos.length && (
-            <TodoList
-              onUpdateTodo={updateTodo}
-              onCheckedHandler={checkedHandler}
-              filteredTodos={filteredTodos}
-              onMarkAsEdit={markAsEdit}
-              onHandleKey={handleKey}
-            />
-          )}
-          {!todos.length && <EmptyTodoFeedback />}
+      <div className="todo-app">
+        <div className="name-container">
+          <h2>What's your Name</h2>
+          <input
+            type="text"
+            value={name}
+            onChange={e => setName(e.target.value)}
+            className="todo-input"
+            placeholder="What is your name?"
+          />
+          {name && <p className="mt-2">Hello {name}</p>}
         </div>
+        <h2>Todo App</h2>
+        <TodoForm />
+        {!!todos.length && (
+          <TodoList
+            onUpdateTodo={updateTodo}
+            onCheckedHandler={checkedHandler}
+            filteredTodos={filteredTodos}
+            onMarkAsEdit={markAsEdit}
+            onHandleKey={handleKey}
+          />
+        )}
+        {!todos.length && <EmptyTodoFeedback />}
       </div>
     </TodosContext.Provider>
   );
