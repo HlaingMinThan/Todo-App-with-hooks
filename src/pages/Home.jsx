@@ -1,9 +1,9 @@
 import '../reset.css';
 import '../App.css';
 import { useState, useEffect } from 'react';
-import TodoList from './TodoList';
-import TodoForm from './TodoForm';
-import EmptyTodoFeedback from './EmptyTodoFeedback';
+import TodoList from '../components/TodoList';
+import TodoForm from '../components/TodoForm';
+import EmptyTodoFeedback from '../components/EmptyTodoFeedback';
 import useLocalStorage from '../hooks/useLocalStorage';
 import TodosContext from '../context/TodosContext';
 

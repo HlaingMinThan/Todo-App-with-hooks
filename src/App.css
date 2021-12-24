@@ -156,3 +156,23 @@ h2 {
 .mt-2 {
   margin-top: 20px;
 }
+
+nav {
+  padding: 20px;
+}
+.d-flex {
+  display: flex;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
+nav a {
+  text-decoration: none;
+  margin-left: 1rem;
+  border: 1px solid #999;
+  padding: 7px 16px;
+  color: brown;
+  border-radius: 99999px;
+}
